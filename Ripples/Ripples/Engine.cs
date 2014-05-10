@@ -36,35 +36,26 @@ namespace Ripples
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
-         
 
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+         
             Input.Initialize();
+
+            ripples.Initialize();
 
             this.IsMouseVisible = true;
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
             Point resolution = new Point(1980, 1080);
             watersize = new Point(512, 288);
-            ripples = new Ripples(GraphicsDevice, watersize);
+            ripples = new Ripples(GraphicsDevice, watersize, resolution);
+            ripples.LoadContent(Content);
+
 
             graphics.PreferredBackBufferHeight = resolution.Y;
             graphics.PreferredBackBufferWidth = resolution.X;
@@ -72,44 +63,24 @@ namespace Ripples
 
             scale = new Vector2((float)resolution.X / watersize.X, (float)resolution.Y / watersize.Y);
             scalematrix = Matrix.CreateScale(scale.X, scale.Y, 1);
-            ripples.Load(Content);
-
-            // TODO: use this.Content to load your game content here
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
             Input.Update();
 
-            //if (Input.MouseXY().X != mousedelta.X || Input.MouseXY().Y != mousedelta.Y)
             if(Input.MouseLeftDown())
             {
                 Vector2 mousepos = Input.MouseXY();
                 mousepos.X /= scale.X;
                 mousepos.Y /= scale.Y;
 
-                ripples.ripple(10f, (int)mousepos.X, (int)mousepos.Y);
-                ripples.ripple(10f, (int)mousepos.X + 1, (int)mousepos.Y);
-                ripples.ripple(10f, (int)mousepos.X, (int)mousepos.Y + 1);
-                ripples.ripple(10f, (int)mousepos.X + 1, (int)mousepos.Y + 1);
+                int dropwidth = 5;
+                int dropheight = 5;
+
+                for (int x = 0; x < dropwidth; x++)
+                    for (int y = 0; y < dropheight; y++)
+                        ripples.ripple(0.4f, (int)mousepos.X + x, (int)mousepos.Y + y);
             }
             if (Input.MouseRightDown())
             {
@@ -117,38 +88,35 @@ namespace Ripples
                 mousepos.X /= scale.X;
                 mousepos.Y /= scale.Y;
 
-                ripples.addcoll((int)mousepos.X, (int)mousepos.Y);
-                ripples.addcoll((int)mousepos.X + 1, (int)mousepos.Y);
-                ripples.addcoll((int)mousepos.X, (int)mousepos.Y + 1);
-                ripples.addcoll((int)mousepos.X + 1, (int)mousepos.Y + 1);
+                int brushwidth = 5;
+                int brushheight = 5;
+
+                for (int x = 0; x < brushwidth;x++)
+                    for (int y = 0; y < brushheight; y++)
+                        ripples.addcoll((int)mousepos.X + x, (int)mousepos.Y + y);
+
             }
+
             mousedelta = Input.MouseXY();
 
             counter++;
 
             ripples.Update();
 
-           
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DeepSkyBlue);
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, scalematrix);
+            //spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, scalematrix);
 
-            ripples.Draw(spriteBatch);
+            //ripples.Draw(spriteBatch);
 
-            spriteBatch.End();
-            // TODO: Add your drawing code here
+            //spriteBatch.End();
+            ripples.Draw3D();
 
             base.Draw(gameTime);
         }

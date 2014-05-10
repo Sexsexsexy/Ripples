@@ -112,6 +112,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Ripples.cs" />
+    <Compile Include="Ripples3D.cs" />
+    <Compile Include="SimpleCamera2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
