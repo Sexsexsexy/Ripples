@@ -34,8 +34,6 @@ namespace Ripples
             width = size.X;
             height = size.Y;
 
-            effect = new BasicEffect(gd);
-
             Buffer1 = new float[width, height];
             Buffer2 = new float[width, height];
             collisiongrid = new bool[width, height];

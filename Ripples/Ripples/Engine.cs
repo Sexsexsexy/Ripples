@@ -51,8 +51,8 @@ namespace Ripples
 
         protected override void LoadContent()
         {
-            Point resolution = new Point(1980, 1080);
-            watersize = new Point(512, 288);
+            Point resolution = new Point(1280, 720);
+            watersize = new Point(256, 144);
             ripples = new Ripples(GraphicsDevice, watersize, resolution);
             ripples.LoadContent(Content);
 
@@ -80,7 +80,7 @@ namespace Ripples
 
                 for (int x = 0; x < dropwidth; x++)
                     for (int y = 0; y < dropheight; y++)
-                        ripples.ripple(0.4f, (int)mousepos.X + x, (int)mousepos.Y + y);
+                        ripples.ripple(0.1f, (int)mousepos.X + x, (int)mousepos.Y + y);
             }
             if (Input.MouseRightDown())
             {
